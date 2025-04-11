@@ -255,8 +255,8 @@ class _MesChampsPageState extends State<MesChampsPage> {
             penalty = 0.8;
           }
 
-          final totalHarvest =
-              (((productionFruit * nbPlants) * penalty) * 1000).round() / 1000;
+          final harvest = (productionFruit * nbPlants) * penalty;
+          final totalHarvest = double.parse(harvest.toStringAsFixed(3));
 
           fruitsRecoltes[kafeName] =
               (fruitsRecoltes[kafeName] ?? 0) + totalHarvest;

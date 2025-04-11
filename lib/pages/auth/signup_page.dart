@@ -79,10 +79,10 @@ class _SignUpPageState extends State<SignUpPage> {
       'prenom': _prenomController.text.trim(),
       'email': _emailController.text.trim(),
       'bourse': 60.0,
-      'grain_d_or': 0.0,
-      'exploitations': [],
-      'fruits_recoltes': [],
-      'grains_seches': [],
+      'grains_d_or': 0.0,
+      'champs': [],
+      'fruits_recoltes': {},
+      'grains_seches': {},
       'assemblages': [],
     });
   }
