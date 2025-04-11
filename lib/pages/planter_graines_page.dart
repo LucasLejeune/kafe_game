@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:kafe_game/pages/mes_champs_page.dart';
 import '../widgets/gradient_background.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PlanterGrainesPage extends StatefulWidget {
   final String champId;
@@ -18,6 +18,8 @@ class _PlanterGrainesPageState extends State<PlanterGrainesPage> {
   String? _selectedKafeId;
   int _nombrePlants = 1;
   late String _selectedChampId;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Map<String, dynamic>> _cafesDisponibles = [];
 
@@ -54,10 +56,15 @@ class _PlanterGrainesPageState extends State<PlanterGrainesPage> {
   }
 
   Future<void> _planterGraines() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
     if (_formKey.currentState!.validate()) {
       try {
         DocumentReference kafeRef =
             FirebaseFirestore.instance.collection('kafes').doc(_selectedKafeId);
+
+        DocumentSnapshot kafeSnap = await kafeRef.get();
 
         DocumentReference nouveauPlanRef =
             await FirebaseFirestore.instance.collection('plans_de_kafe').add({
@@ -71,6 +78,13 @@ class _PlanterGrainesPageState extends State<PlanterGrainesPage> {
             .doc(_selectedChampId);
         await champRef.update({
           'plans': FieldValue.arrayUnion([nouveauPlanRef])
+        });
+
+        final joueurRef = _firestore.collection('joueurs').doc(user.uid);
+        final joueurSnap = await joueurRef.get();
+        final cout = kafeSnap['cout'] * _nombrePlants;
+        await joueurRef.update({
+          'bourse': FieldValue.increment(-cout),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -101,6 +115,9 @@ class _PlanterGrainesPageState extends State<PlanterGrainesPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
           backgroundColor: Colors.transparent,
           title: const Text(
             'Planter des Graines',
@@ -167,7 +184,7 @@ class _PlanterGrainesPageState extends State<PlanterGrainesPage> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: Text(
-                                      'Temps de pousse: ${_kafeSelectionne!['temps_pousse']} jours',
+                                      'Temps de pousse: ${_kafeSelectionne!['temps_pousse']} minutes',
                                       style:
                                           const TextStyle(color: Colors.black),
                                       textAlign: TextAlign.left,

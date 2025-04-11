@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kafe_game/pages/mes_champs_page.dart';
+import 'package:kafe_game/pages/stock_page.dart';
 import 'auth/login_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/gradient_background.dart';
@@ -200,27 +201,36 @@ class _HomePageState extends State<HomePage> {
                               )),
                         ),
                         Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.all(4),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.white),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                FaIcon(FontAwesomeIcons.box,
-                                    size: 25,
-                                    color: Color.fromRGBO(37, 99, 235, 100)),
-                                SizedBox(height: 8),
-                                Text('Stock',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.black)),
-                              ],
-                            ),
-                          ),
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StockPage()),
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    FaIcon(FontAwesomeIcons.box,
+                                        size: 25,
+                                        color:
+                                            Color.fromRGBO(37, 99, 235, 100)),
+                                    SizedBox(height: 8),
+                                    Text('Stock',
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.black)),
+                                  ],
+                                ),
+                              )),
                         ),
                       ],
                     ),
